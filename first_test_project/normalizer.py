@@ -1,2 +1,2 @@
-def get_normalized(num, collection, collection_min, out_range_min, out_range_max):
-    return round((((num - collection_min) / (max(collection) - collection_min)) * (out_range_max - out_range_min)) + out_range_min, 2)
+def get_normalized(num, input_max, input_min, out_range_min, out_range_max):
+    return round((((num - input_min) / (input_max - input_min)) * (out_range_max - out_range_min)) + out_range_min, 2)

@@ -1,5 +1,8 @@
-FOLDER = "swimdata/"
 import statistics
+import normalizer
+
+FOLDER = "swimdata/"
+CHARTS = "charts/"
 
 def read_swim_data(filename):
     """Return swim data from a file.
@@ -25,5 +28,48 @@ def read_swim_data(filename):
     avg_minutes = int(avg/6000)
     avg_seconds = int(int(avg - (6000*avg_minutes))/100)
     avg_milliseconds = round(avg - avg_minutes*6000 - avg_seconds * 100)
-    avg_str = (f"{avg_minutes}:{avg_seconds}.{avg_milliseconds}")
+    avg_str = (f"{avg_minutes}:{avg_seconds:0<2}.{avg_milliseconds}")
     return swimmer, age, distance, stroke, times, avg_str, converted # Returned as a tuple.
+
+def produce_bar_charts(filename):
+    """Given the name of a swimmer's file, produce a HTML/SVG-based bar chart.
+    
+    Save the chart to the CHARTS folder. Return the path tp the bar chart file.
+    """
+    (swimmer, age, distance, stroke, times, average, converts) = read_swim_data(filename)
+    title = (f"{swimmer} (Under {age}) {distance} {stroke}")
+    times.reverse()
+    converts.reverse()
+    
+    header = (f"""<!DOCTYPE html>
+    <html>
+        <head>
+            <title>
+                {title}
+            </title>
+        </head>
+        <body>
+            <h3>{title}</h3>""")
+    
+    max_in = max(converts)
+    body = ""
+    
+    for n, t in enumerate(converts):
+        normalized = normalizer.get_normalized(converts[n], max_in, 0, 0, 350)
+        body += f"""
+                <svg height="30" width="400">
+                    <rect height="30" width="{normalized}" style="fill:rgb(0,0,255);" />
+                </svg>{times[n]}<br />"""
+    
+    footer = f"""
+            <p>Average time: {average}</p>
+        </body>
+    </html>
+        """
+    webpage = header + body + footer
+    outfile = (f"charts/{filename.removesuffix('.txt')}.html")
+
+    with open(outfile, "w") as tf:
+        print(webpage, file=tf)
+
+    return outfile
