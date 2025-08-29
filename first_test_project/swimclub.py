@@ -25,5 +25,5 @@ def read_swim_data(filename):
     avg_minutes = int(avg/6000)
     avg_seconds = int(int(avg - (6000*avg_minutes))/100)
     avg_milliseconds = round(avg - avg_minutes*6000 - avg_seconds * 100)
-    avg_str = (str(avg_minutes) + ":" + str(avg_seconds) + "." + str(avg_milliseconds))
-    return swimmer, age, distance, stroke, times, avg_str # Returned as a tuple.
+    avg_str = (f"{avg_minutes}:{avg_seconds}.{avg_milliseconds}")
+    return swimmer, age, distance, stroke, times, avg_str, converted # Returned as a tuple.
