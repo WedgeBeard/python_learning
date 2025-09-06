@@ -25,7 +25,13 @@ def populate_data():
 @app.get("/swimmers")
 def display_swimmers():
     populate_data()
-    return str(sorted(session["swimmers"]))
+    return render_template(
+        "select.html",
+        url="/showfiles",
+        select_id="swimmer",
+        title="Select a swimmer",
+        data=sorted(session["swimmers"]),
+    )
 
 @app.get("/files/<swimmer>")
 def get_swimmers_files(swimmer):
